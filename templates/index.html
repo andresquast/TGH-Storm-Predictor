@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGH Storm Closure Duration Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TGH Storm Closure Duration Predictor</h1>
+            <p class="subtitle">Predict bridge closure duration based on storm characteristics</p>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <form id="stormForm">
+                    <div class="form-group">
+                        <label for="category">Hurricane Category (Saffir-Simpson Scale)</label>
+                        <select id="category" name="category" required>
+                            <option value="0">Tropical Depression (0)</option>
+                            <option value="1">Category 1 (74-95 mph)</option>
+                            <option value="2">Category 2 (96-110 mph)</option>
+                            <option value="3">Category 3 (111-129 mph)</option>
+                            <option value="4">Category 4 (130-156 mph)</option>
+                            <option value="5">Category 5 (157+ mph)</option>
+                        </select>
+                        <small>Hurricane category at Tampa Bay</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max_wind">Maximum Wind Speed (mph)</label>
+                        <input type="number" id="max_wind" name="max_wind" min="0" max="200" step="1" required>
+                        <small>Maximum sustained winds at Tampa Bay</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="storm_surge">Storm Surge (feet)</label>
+                        <input type="number" id="storm_surge" name="storm_surge" min="0" max="20" step="0.1" required>
+                        <small>Expected storm surge at Tampa Bay</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="track_distance">Track Distance (miles)</label>
+                        <input type="number" id="track_distance" name="track_distance" min="0" max="200" step="1" required>
+                        <small>Distance from TGH at closest approach</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="forward_speed">Forward Speed (mph)</label>
+                        <input type="number" id="forward_speed" name="forward_speed" min="0" max="30" step="0.1" required>
+                        <small>Storm forward motion speed (key predictor)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="month">Month</label>
+                        <select id="month" name="month" required>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <small>Month when storm is expected</small>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="predictBtn">
+                        Predict Closure Duration
+                    </button>
+                </form>
+            </div>
+
+            <div id="resultContainer" class="result-container hidden">
+                <div class="result-card">
+                    <h2>Predicted Closure Duration</h2>
+                    <div class="prediction-display">
+                        <span class="prediction-value" id="predictionHours">--</span>
+                        <span class="prediction-unit">hours</span>
+                    </div>
+                    <div class="prediction-days">
+                        (approximately <span id="predictionDays">--</span> days)
+                    </div>
+                    
+                    <div class="feature-summary">
+                        <h3>Input Summary</h3>
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <span class="feature-label">Category:</span>
+                                <span class="feature-value" id="summaryCategory">--</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-label">Max Wind:</span>
+                                <span class="feature-value" id="summaryWind">--</span> mph
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-label">Storm Surge:</span>
+                                <span class="feature-value" id="summarySurge">--</span> ft
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-label">Track Distance:</span>
+                                <span class="feature-value" id="summaryDistance">--</span> miles
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-label">Forward Speed:</span>
+                                <span class="feature-value" id="summarySpeed">--</span> mph
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-label">Month:</span>
+                                <span class="feature-value" id="summaryMonth">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="errorContainer" class="error-container hidden">
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Model trained on historical storm data (2004-2024)</p>
+            <p>Mean Absolute Error: ±0.9 hours (Leave-One-Out Cross-Validation)</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+
