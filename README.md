@@ -1,6 +1,6 @@
 # TGH Storm Staffing Predictor
 
-Predictive model for Tampa General Hospital bridge closure duration and staffing requirements during hurricanes.
+Personal project: Predictive model for bridge closure duration and staffing requirements during hurricanes affecting the Tampa Bay area.
 
 ## Project Overview
 
@@ -174,7 +174,6 @@ print(f"Predicted closure: {prediction:.1f} hours")
 - Real-time integration with NHC storm data
 - Automated alerts at T-72, T-48, T-24 hours
 - Frontend interface for predictions
-- Integration with TGH staffing systems
 
 ## Adding New Storms
 
@@ -209,7 +208,7 @@ To add new historical storms to the dataset:
 
 ## License
 
-Internal use for Tampa General Hospital.
+Personal project - for educational and research purposes.
 
 ---
 
