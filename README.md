@@ -11,17 +11,53 @@ This system predicts:
 
 ## Quick Start
 
+### Backend Setup
+
 ```bash
-# 1. Install dependencies
+# 1. Install Python dependencies
 pip install -r requirements.txt
 
-# 2. Run complete analysis pipeline
+# 2. Train the model (if not already trained)
+python train_models.py
+
+# 3. Run the Flask backend server
+python app.py
+```
+
+The Flask API will run on `http://localhost:5000`
+
+### Frontend Setup (React)
+
+```bash
+# 1. Install Node.js dependencies
+npm install
+
+# 2. Start React development server
+npm run dev
+```
+
+The React app will run on `http://localhost:3000` and proxy API requests to the Flask backend.
+
+### Production Build
+
+```bash
+# Build React app for production
+npm run build
+
+# The Flask app will serve the built React app from the / route
+python app.py
+```
+
+### Running Analysis Pipeline
+
+```bash
+# Run complete analysis pipeline
 python run_analysis.py
 
-# 3. Run individual components
+# Run individual components
 python data_fetcher.py          # Load and explore data
 python train_models.py          # Train prediction models
-python validate_model.py         # Validate with LOOCV
+python validate_model.py        # Validate with LOOCV
 ```
 
 ## Project Structure
@@ -36,10 +72,22 @@ tgh-storm-predictor/
 │   ├── closure_model.pkl          # Trained prediction model
 │   └── seasonal_census.pkl        # Monthly census averages
 │
+├── src/                           # React frontend source
+│   ├── components/                # React components
+│   │   ├── StormForm.jsx          # Input form component
+│   │   ├── PredictionResult.jsx   # Results display component
+│   │   └── ErrorMessage.jsx       # Error display component
+│   ├── App.jsx                    # Main React app component
+│   ├── main.jsx                   # React entry point
+│   └── index.css                  # Global styles
+│
+├── app.py                         # Flask backend API server
 ├── data_fetcher.py                # Loads data from JSON
 ├── train_models.py                # Trains prediction models
 ├── validate_model.py              # LOOCV validation
 ├── run_analysis.py                # Complete analysis pipeline
+├── package.json                   # Node.js dependencies
+├── vite.config.js                 # Vite build configuration
 ├── validation_results.png         # LOOCV visualization (auto-generated)
 ├── feature_importance.png         # Feature coefficients visualization (auto-generated)
 └── README.md                       # This file
@@ -173,7 +221,7 @@ print(f"Predicted closure: {prediction:.1f} hours")
 ### Phase 3: Operational Deployment
 - Real-time integration with NHC storm data
 - Automated alerts at T-72, T-48, T-24 hours
-- Frontend interface for predictions
+- ✅ Frontend interface for predictions (React web app)
 
 ## Adding New Storms
 
