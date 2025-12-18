@@ -19,41 +19,27 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-node_modules/
 
 # Virtual Environment
 venv/
-env/
 ENV/
 .venv
+
+# React/Node
+node_modules/
+dist/
+.DS_Store
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
-.DS_Store
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Environment variables
+# Environment
 .env
 .env.local
 
-# Model files (keep structure but ignore if regenerated)
-# models/*.pkl
-
-# Generated data files
-# data/modeling_data.csv
-
-# Generated images (keep for now, but can be regenerated)
-# *.png
-
-# Logs
-*.log
-
-# Streamlit
-.streamlit/
-
+# Build
+build/
+*.egg-info/
