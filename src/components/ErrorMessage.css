@@ -1,0 +1,25 @@
+.error-container {
+    margin-top: 20px;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.error-message {
+    background: #3d1f1f;
+    color: #ff6b6b;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #5a2a2a;
+    font-weight: 500;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
