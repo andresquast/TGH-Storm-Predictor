@@ -11,7 +11,6 @@ function StaffingProjections({ predictionData }) {
   const [mae, setMae] = useState(null);
   const [useClientSide, setUseClientSide] = useState(false);
 
-  // Check if model is available
   useEffect(() => {
     loadModelData()
       .then((success) => {
@@ -35,14 +34,12 @@ function StaffingProjections({ predictionData }) {
         let data;
 
         if (useClientSide) {
-          // Use client-side calculation
           data = calculateStaffing({
             predicted_duration_hours: predictionData.prediction_hours,
             month: predictionData.features.month,
             closure_start: new Date(),
           });
         } else {
-          // Fall back to API
           const response = await fetch(
             `${API_BASE_URL}/api/staffing-projections`,
             {
@@ -80,7 +77,6 @@ function StaffingProjections({ predictionData }) {
   }, [predictionData, useClientSide]);
 
   useEffect(() => {
-    // Fetch MAE from model stats API if not using client-side
     if (!useClientSide) {
       fetch(`${API_BASE_URL}/api/model-stats`)
         .then((res) => res.json())
@@ -89,13 +85,10 @@ function StaffingProjections({ predictionData }) {
             setMae(data.model_fit.mae);
           }
         })
-        .catch((err) => {
-          console.error("Failed to fetch MAE:", err);
-          // Fallback to 0.9 if API fails
+        .catch(() => {
           setMae(0.9);
         });
     } else {
-      // Use default MAE for client-side mode
       setMae(0.9);
     }
   }, [useClientSide]);

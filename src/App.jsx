@@ -18,21 +18,17 @@ function App() {
   const [modelLoaded, setModelLoaded] = useState(false)
   const [useClientSide, setUseClientSide] = useState(false)
 
-  // Try to load model data on mount
   useEffect(() => {
     loadModelData()
       .then((success) => {
         if (success) {
           setModelLoaded(true)
           setUseClientSide(true)
-          console.log('Model loaded successfully - using client-side predictions')
         } else {
-          console.log('Model not available - falling back to API')
           setUseClientSide(false)
         }
       })
-      .catch((err) => {
-        console.log('Failed to load model, using API:', err)
+      .catch(() => {
         setUseClientSide(false)
       })
   }, [])
@@ -46,7 +42,6 @@ function App() {
       let data;
 
       if (useClientSide && modelLoaded) {
-        // Use client-side prediction
         const result = predictClosureDuration(formData)
         data = {
           prediction_hours: result.prediction_hours,
@@ -55,7 +50,6 @@ function App() {
           features: result.features
         }
       } else {
-        // Fall back to API
         const response = await fetch(`${API_BASE_URL}/predict`, {
           method: 'POST',
           headers: {
@@ -82,10 +76,8 @@ function App() {
 
   const handleModelStatsClick = () => {
     if (showModelStats) {
-      // If already open, close it
       setShowModelStats(false)
     } else {
-      // Close Data Stats if open, then open Model Stats
       setShowDataStats(false)
       setShowModelStats(true)
     }
@@ -93,17 +85,14 @@ function App() {
 
   const handleDataStatsClick = () => {
     if (showDataStats) {
-      // If already open, close it
       setShowDataStats(false)
     } else {
-      // Close Model Stats if open, then open Data Stats
       setShowModelStats(false)
       setShowDataStats(true)
     }
   }
 
   useEffect(() => {
-    // Try to fetch MAE from model stats API, but don't fail if unavailable
     if (!useClientSide) {
       fetch(`${API_BASE_URL}/api/model-stats`)
         .then((res) => res.json())
@@ -112,13 +101,10 @@ function App() {
             setMae(data.model_fit.mae)
           }
         })
-        .catch((err) => {
-          console.error('Failed to fetch MAE:', err)
-          // Fallback to 0.9 if API fails
+        .catch(() => {
           setMae(0.9)
         })
     } else {
-      // Use default MAE for client-side mode
       setMae(0.9)
     }
   }, [useClientSide])
