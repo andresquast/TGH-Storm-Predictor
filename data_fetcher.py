@@ -125,7 +125,7 @@ class StormDataFetcher:
     
     def export_for_modeling(self, output_path='data/modeling_data.csv'):
         """Export clean data for modeling"""
-        df = self.get_high_quality_data()
+        df = self.get_storms_dataframe(include_no_closure=False)
         
         # Select only features needed for modeling
         modeling_df = df[[
@@ -148,11 +148,11 @@ if __name__ == '__main__':
     fetcher.get_summary_statistics()
     
     # Get DataFrame for modeling
-    df = fetcher.get_high_quality_data()
+    df = fetcher.get_storms_dataframe(include_no_closure=False)
     print("\n" + "="*60)
     print("STORMS INCLUDED IN MODELING")
     print("="*60)
-    print(df[['name', 'year', 'closure_hours', 'max_wind', 'forward_speed']].to_string(index=False))
+    print(df[['name', 'year', 'closure_hours', 'max_wind', 'forward_speed', 'data_quality']].to_string(index=False))
     
     # Export for modeling
     fetcher.export_for_modeling()

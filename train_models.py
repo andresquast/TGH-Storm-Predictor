@@ -20,14 +20,14 @@ def train_closure_model():
     
     # Load data
     fetcher = StormDataFetcher()
-    df = fetcher.get_high_quality_data()
+    df = fetcher.get_storms_dataframe(include_no_closure=False)
     
     print("\n" + "="*60)
     print("TRAINING BRIDGE CLOSURE PREDICTION MODEL")
     print("="*60)
     
-    # Features for prediction
-    features = ['category', 'max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
+    # Features for prediction (removed category, using month as single feature)
+    features = ['max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
     X = df[features]
     y = df['closure_hours']
     
@@ -153,9 +153,9 @@ def test_model_predictions():
     
     # Load data
     fetcher = StormDataFetcher()
-    df = fetcher.get_high_quality_data()
+    df = fetcher.get_storms_dataframe(include_no_closure=False)
     
-    features = ['category', 'max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
+    features = ['max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
     X = df[features]
     y_actual = df['closure_hours']
     

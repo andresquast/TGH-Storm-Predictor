@@ -17,19 +17,6 @@
             <div class="form-container">
                 <form id="stormForm">
                     <div class="form-group">
-                        <label for="category">Hurricane Category (Saffir-Simpson Scale)</label>
-                        <select id="category" name="category" required>
-                            <option value="0">Tropical Depression (0)</option>
-                            <option value="1">Category 1 (74-95 mph)</option>
-                            <option value="2">Category 2 (96-110 mph)</option>
-                            <option value="3">Category 3 (111-129 mph)</option>
-                            <option value="4">Category 4 (130-156 mph)</option>
-                            <option value="5">Category 5 (157+ mph)</option>
-                        </select>
-                        <small>Hurricane category at Tampa Bay</small>
-                    </div>
-
-                    <div class="form-group">
                         <label for="max_wind">Maximum Wind Speed (mph)</label>
                         <input type="number" id="max_wind" name="max_wind" min="0" max="200" step="1" required>
                         <small>Maximum sustained winds at Tampa Bay</small>
@@ -89,13 +76,11 @@
                         (approximately <span id="predictionDays">--</span> days)
                     </div>
                     
+                    <div id="confidenceInterval" style="display: none;"></div>
+                    
                     <div class="feature-summary">
                         <h3>Input Summary</h3>
                         <div class="feature-grid">
-                            <div class="feature-item">
-                                <span class="feature-label">Category:</span>
-                                <span class="feature-value" id="summaryCategory">--</span>
-                            </div>
                             <div class="feature-item">
                                 <span class="feature-label">Max Wind:</span>
                                 <span class="feature-value" id="summaryWind">--</span> mph

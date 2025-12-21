@@ -22,7 +22,7 @@ def leave_one_out_validation():
     
     # Load data
     fetcher = StormDataFetcher()
-    df = fetcher.get_high_quality_data()
+    df = fetcher.get_storms_dataframe(include_no_closure=False)
     
     print("\n" + "="*60)
     print("LEAVE-ONE-OUT CROSS-VALIDATION")
@@ -30,7 +30,7 @@ def leave_one_out_validation():
     print(f"\nValidating on {len(df)} storms")
     print("Each storm predicted using model trained on all OTHER storms\n")
     
-    features = ['category', 'max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
+    features = ['max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
     
     results = []
     
@@ -166,13 +166,13 @@ def visualize_validation_results(results_df):
 
 
 def visualize_feature_importance():
-    """Create visualization of feature coefficients and correlations"""
+    """Create separate visualizations for feature coefficients and correlations"""
     
     # Load data
     fetcher = StormDataFetcher()
-    df = fetcher.get_high_quality_data()
+    df = fetcher.get_storms_dataframe(include_no_closure=False)
     
-    features = ['category', 'max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
+    features = ['max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
     X = df[features]
     y = df['closure_hours']
     
@@ -185,7 +185,7 @@ def visualize_feature_importance():
         'feature': features,
         'coefficient': model.coef_,
         'abs_coefficient': np.abs(model.coef_)
-    }).sort_values('abs_coefficient', ascending=False)
+    }).sort_values('feature', ascending=True)  # Sort alphabetically
     
     # Get correlations
     correlations = df[features + ['closure_hours']].corr()['closure_hours'].drop('closure_hours')
@@ -193,31 +193,40 @@ def visualize_feature_importance():
         'feature': correlations.index,
         'correlation': correlations.values,
         'abs_correlation': np.abs(correlations.values)
-    }).sort_values('abs_correlation', ascending=False)
+    }).sort_values('feature', ascending=True)  # Sort alphabetically
     
-    # Create visualization
-    fig, axes = plt.subplots(1, 2, figsize=(16, 7))
-    
-    # Plot 1: Model Coefficients (Feature Weights)
-    ax1 = axes[0]
+    # Chart 1: Model Coefficients (Feature Weights)
+    fig1, ax1 = plt.subplots(figsize=(14, 10))
     colors = ['#2ecc71' if c > 0 else '#e74c3c' for c in coeffs['coefficient']]
     bars = ax1.barh(range(len(coeffs)), coeffs['coefficient'], 
-                    color=colors, alpha=0.7, edgecolor='black', linewidth=2)
+                    color=colors, alpha=0.7, edgecolor='black', linewidth=2, height=0.7)
     
-    # Add value labels on bars
+    # Calculate x-axis limits with padding for labels
+    min_val = coeffs['coefficient'].min()
+    max_val = coeffs['coefficient'].max()
+    # Add padding: 15% of range on each side, plus extra for label width
+    range_val = max_val - min_val
+    padding = max(range_val * 0.15, 2.5)  # At least 2.5 units padding
+    x_min = min_val - padding
+    x_max = max_val + padding
+    ax1.set_xlim(x_min, x_max)
+    
+    # Add value labels on bars with better positioning
     for i, (idx, row) in enumerate(coeffs.iterrows()):
         value = row['coefficient']
-        ax1.text(value + (0.5 if value > 0 else -0.5), i, 
+        # Calculate offset based on value magnitude
+        offset = max(abs(value) * 0.05, 1.0) if value > 0 else -max(abs(value) * 0.05, 1.0)
+        ax1.text(value + offset, i, 
                 f'{value:+.2f}', 
                 va='center', ha='left' if value > 0 else 'right',
-                fontsize=11, fontweight='bold')
+                fontsize=13, fontweight='bold')
     
     ax1.set_yticks(range(len(coeffs)))
-    ax1.set_yticklabels(coeffs['feature'], fontsize=12, fontweight='bold')
-    ax1.set_xlabel('Coefficient Value', fontsize=13, fontweight='bold')
-    ax1.set_title('Model Coefficients\n(Feature Weights)', 
-                 fontsize=14, fontweight='bold')
-    ax1.axvline(x=0, color='black', linestyle='-', linewidth=1)
+    ax1.set_yticklabels(coeffs['feature'], fontsize=14, fontweight='bold')
+    ax1.set_xlabel('Coefficient Value', fontsize=15, fontweight='bold')
+    ax1.set_title('Model Coefficients (Feature Weights)', 
+                 fontsize=16, fontweight='bold', pad=20)
+    ax1.axvline(x=0, color='black', linestyle='-', linewidth=1.5)
     ax1.grid(True, alpha=0.3, axis='x')
     
     # Add legend for positive/negative
@@ -225,29 +234,49 @@ def visualize_feature_importance():
         Patch(facecolor='#2ecc71', alpha=0.7, label='Positive (increases closure)'),
         Patch(facecolor='#e74c3c', alpha=0.7, label='Negative (decreases closure)')
     ]
-    ax1.legend(handles=legend_elements, fontsize=10, loc='lower right')
+    ax1.legend(handles=legend_elements, fontsize=12, loc='lower right')
     
-    # Plot 2: Correlations with Closure Time
-    ax2 = axes[1]
+    # Adjust layout to give labels more room - increase left margin significantly
+    fig1.subplots_adjust(left=0.25, right=0.95, top=0.95, bottom=0.1)
+    
+    # Save figure
+    output_path1 = 'feature_coefficients.png'
+    plt.savefig(output_path1, dpi=300, bbox_inches='tight')
+    print(f"\nFeature coefficients visualization saved: {output_path1}")
+    plt.close(fig1)
+    
+    # Chart 2: Correlations with Closure Time
+    fig2, ax2 = plt.subplots(figsize=(14, 10))
     colors_corr = ['#3498db' if c > 0 else '#9b59b6' for c in correlations_df['correlation']]
     bars2 = ax2.barh(range(len(correlations_df)), correlations_df['correlation'], 
-                     color=colors_corr, alpha=0.7, edgecolor='black', linewidth=2)
+                     color=colors_corr, alpha=0.7, edgecolor='black', linewidth=2, height=0.7)
     
-    # Add value labels on bars
+    # Calculate x-axis limits with padding for labels
+    min_corr = correlations_df['correlation'].min()
+    max_corr = correlations_df['correlation'].max()
+    # Add padding: 10% of range on each side for correlation values
+    range_corr = max_corr - min_corr
+    padding_corr = max(range_corr * 0.10, 0.08)  # At least 0.08 padding
+    x_min_corr = max(min_corr - padding_corr, -1.1)  # Don't go too far beyond -1
+    x_max_corr = min(max_corr + padding_corr, 1.1)   # Don't go too far beyond 1
+    ax2.set_xlim(x_min_corr, x_max_corr)
+    
+    # Add value labels on bars with better positioning
     for i, (idx, row) in enumerate(correlations_df.iterrows()):
         value = row['correlation']
-        ax2.text(value + (0.02 if value > 0 else -0.02), i, 
+        # Calculate offset based on value magnitude
+        offset = max(abs(value) * 0.05, 0.02) if value > 0 else -max(abs(value) * 0.05, 0.02)
+        ax2.text(value + offset, i, 
                 f'{value:.3f}', 
                 va='center', ha='left' if value > 0 else 'right',
-                fontsize=11, fontweight='bold')
+                fontsize=13, fontweight='bold')
     
     ax2.set_yticks(range(len(correlations_df)))
-    ax2.set_yticklabels(correlations_df['feature'], fontsize=12, fontweight='bold')
-    ax2.set_xlabel('Correlation Coefficient', fontsize=13, fontweight='bold')
-    ax2.set_title('Feature Correlations\n(with Closure Duration)', 
-                 fontsize=14, fontweight='bold')
-    ax2.axvline(x=0, color='black', linestyle='-', linewidth=1)
-    ax2.set_xlim(-1, 1)
+    ax2.set_yticklabels(correlations_df['feature'], fontsize=14, fontweight='bold')
+    ax2.set_xlabel('Correlation Coefficient', fontsize=15, fontweight='bold')
+    ax2.set_title('Feature Correlations (with Closure Duration)', 
+                 fontsize=16, fontweight='bold', pad=20)
+    ax2.axvline(x=0, color='black', linestyle='-', linewidth=1.5)
     ax2.grid(True, alpha=0.3, axis='x')
     
     # Add legend for positive/negative correlation
@@ -255,16 +284,18 @@ def visualize_feature_importance():
         Patch(facecolor='#3498db', alpha=0.7, label='Positive correlation'),
         Patch(facecolor='#9b59b6', alpha=0.7, label='Negative correlation')
     ]
-    ax2.legend(handles=legend_elements2, fontsize=10, loc='lower right')
+    ax2.legend(handles=legend_elements2, fontsize=12, loc='lower right')
     
-    plt.tight_layout()
+    # Adjust layout to give labels more room - increase left margin significantly
+    fig2.subplots_adjust(left=0.25, right=0.95, top=0.95, bottom=0.1)
     
     # Save figure
-    output_path = 'feature_importance.png'
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f"\nFeature importance visualization saved: {output_path}")
+    output_path2 = 'feature_correlations.png'
+    plt.savefig(output_path2, dpi=300, bbox_inches='tight')
+    print(f"Feature correlations visualization saved: {output_path2}")
+    plt.close(fig2)
     
-    return fig
+    return fig1, fig2
 
 
 def feature_importance_analysis():
@@ -276,9 +307,9 @@ def feature_importance_analysis():
     
     # Load data
     fetcher = StormDataFetcher()
-    df = fetcher.get_high_quality_data()
+    df = fetcher.get_storms_dataframe(include_no_closure=False)
     
-    features = ['category', 'max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
+    features = ['max_wind', 'storm_surge', 'track_distance', 'forward_speed', 'month']
     X = df[features]
     y = df['closure_hours']
     
@@ -388,7 +419,8 @@ if __name__ == '__main__':
     print("""
 Files created:
   validation_results.png - Visual comparison of predictions
-  feature_importance.png - Feature coefficients and correlations
+  feature_coefficients.png - Feature coefficients (model weights)
+  feature_correlations.png - Feature correlations with closure duration
   
 Next steps:
   - Use app.py to demonstrate interactive predictions

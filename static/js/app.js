@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Collect form data
         const formData = {
-            category: parseFloat(document.getElementById('category').value),
             max_wind: parseFloat(document.getElementById('max_wind').value),
             storm_surge: parseFloat(document.getElementById('storm_surge').value),
             track_distance: parseFloat(document.getElementById('track_distance').value),
@@ -65,9 +64,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('predictionHours').textContent = data.prediction_hours.toFixed(1);
         document.getElementById('predictionDays').textContent = data.prediction_days.toFixed(1);
         
+        // Update confidence interval if available
+        if (data.confidence_interval) {
+            const ciElement = document.getElementById('confidenceInterval');
+            if (ciElement) {
+                ciElement.innerHTML = `
+                    <div style="text-align: center; margin-top: 15px; padding: 12px; background: #1a1a1a; border-radius: 4px; border: 1px solid #404040;">
+                        <div style="font-size: 0.9em; color: #b0b0b0; margin-bottom: 6px; font-weight: 600;">95% Confidence Interval:</div>
+                        <div style="font-size: 1.1em; color: #e0e0e0; font-weight: 600;">
+                            ${data.confidence_interval.lower.toFixed(1)} - ${data.confidence_interval.upper.toFixed(1)} hours
+                            <span style="display: block; font-size: 0.85em; color: #b0b0b0; margin-top: 4px; font-weight: 400;">
+                                (${data.confidence_interval.lower_days.toFixed(1)} - ${data.confidence_interval.upper_days.toFixed(1)} days)
+                            </span>
+                        </div>
+                    </div>
+                `;
+                ciElement.style.display = 'block';
+            }
+        }
+        
         // Update feature summary
         const features = data.features;
-        document.getElementById('summaryCategory').textContent = features.category;
         document.getElementById('summaryWind').textContent = features.max_wind;
         document.getElementById('summarySurge').textContent = features.storm_surge;
         document.getElementById('summaryDistance').textContent = features.track_distance;
@@ -93,25 +110,5 @@ document.addEventListener('DOMContentLoaded', function() {
         errorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
     
-    // Add some helpful input validation and auto-fill suggestions
-    const categorySelect = document.getElementById('category');
-    const maxWindInput = document.getElementById('max_wind');
-    
-    // Auto-fill wind speed based on category
-    categorySelect.addEventListener('change', function() {
-        const category = parseInt(this.value);
-        const windRanges = {
-            0: 30,   // Tropical Depression
-            1: 85,   // Category 1
-            2: 100,  // Category 2
-            3: 120,  // Category 3
-            4: 145,  // Category 4
-            5: 165   // Category 5
-        };
-        
-        if (windRanges[category] !== undefined && !maxWindInput.value) {
-            maxWindInput.value = windRanges[category];
-        }
-    });
 });
 

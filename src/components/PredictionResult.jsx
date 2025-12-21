@@ -1,4 +1,5 @@
 import React from 'react'
+import StaffingProjections from './StaffingProjections'
 import './PredictionResult.css'
 
 const MONTH_NAMES = [
@@ -25,10 +26,6 @@ function PredictionResult({ data }) {
                     <h3>Input Summary</h3>
                     <div className="feature-grid">
                         <div className="feature-item">
-                            <span className="feature-label">Category:</span>
-                            <span className="feature-value">{features.category}</span>
-                        </div>
-                        <div className="feature-item">
                             <span className="feature-label">Max Wind:</span>
                             <span className="feature-value">{features.max_wind} mph</span>
                         </div>
@@ -51,6 +48,8 @@ function PredictionResult({ data }) {
                     </div>
                 </div>
             </div>
+            
+            <StaffingProjections predictionData={data} />
         </div>
     )
 }

@@ -6,18 +6,8 @@ const MONTH_NAMES = [
     'July', 'August', 'September', 'October', 'November', 'December'
 ]
 
-const WIND_RANGES = {
-    0: 30,
-    1: 85,
-    2: 100,
-    3: 120,
-    4: 145,
-    5: 165
-}
-
 function StormForm({ onSubmit, loading }) {
     const [formData, setFormData] = useState({
-        category: '0',
         max_wind: '',
         storm_surge: '',
         track_distance: '',
@@ -31,22 +21,11 @@ function StormForm({ onSubmit, loading }) {
             ...prev,
             [name]: value
         }))
-
-        if (name === 'category' && !formData.max_wind) {
-            const suggestedWind = WIND_RANGES[parseInt(value)]
-            if (suggestedWind) {
-                setFormData(prev => ({
-                    ...prev,
-                    max_wind: suggestedWind
-                }))
-            }
-        }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
         onSubmit({
-            category: parseFloat(formData.category),
             max_wind: parseFloat(formData.max_wind),
             storm_surge: parseFloat(formData.storm_surge),
             track_distance: parseFloat(formData.track_distance),
@@ -58,25 +37,6 @@ function StormForm({ onSubmit, loading }) {
     return (
         <form className="storm-form" onSubmit={handleSubmit}>
             <div className="form-grid">
-                <div className="form-group">
-                    <label htmlFor="category">Category</label>
-                    <select
-                        id="category"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="0">Tropical Depression</option>
-                        <option value="1">Category 1</option>
-                        <option value="2">Category 2</option>
-                        <option value="3">Category 3</option>
-                        <option value="4">Category 4</option>
-                        <option value="5">Category 5</option>
-                    </select>
-                    <small>Saffir-Simpson scale</small>
-                </div>
-
                 <div className="form-group">
                     <label htmlFor="max_wind">Max Wind (mph)</label>
                     <input
