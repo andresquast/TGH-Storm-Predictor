@@ -1,0 +1,39 @@
+{
+  "constants": {
+    "average_daily_census": 1111,
+    "licensed_beds": 1353,
+    "annual_er_visits": 221334,
+    "daily_er_visits_avg": 606.3945205479451,
+    "inpatient_crisis_ratio": 18,
+    "er_md_patient_ratio": 2.5,
+    "specialty_skeleton_crew": 15,
+    "shift_duration_hours": 12
+  },
+  "temporal": {
+    "monthly_census_multipliers": {
+      "1": 1.25,
+      "2": 1.25,
+      "3": 1.25,
+      "4": 1.0,
+      "5": 1.0,
+      "6": 0.9,
+      "7": 0.9,
+      "8": 0.9,
+      "9": 0.9,
+      "10": 1.0,
+      "11": 1.0,
+      "12": 1.0
+    },
+    "diurnal_er_multipliers": {
+      "peak": 1.2,
+      "off_peak": 0.8
+    },
+    "storm_surge_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "storm_surge_multiplier": 1.2
+  }
+}
