@@ -48,6 +48,28 @@ npm run build
 python app.py
 ```
 
+### GitHub Pages Deployment
+
+The frontend is configured for automatic deployment to GitHub Pages:
+
+1. **Enable GitHub Pages** in your repository settings:
+   - Go to Settings → Pages
+   - Under "Source", select "GitHub Actions"
+   - The workflow will automatically deploy on every push to `main`
+
+2. **Backend API Configuration**:
+   - GitHub Pages only hosts static files, so the Flask backend needs to be hosted separately
+   - To configure the frontend to use a hosted backend, set the `VITE_API_BASE_URL` environment variable:
+     ```bash
+     # Example: if your backend is at https://your-backend.herokuapp.com
+     VITE_API_BASE_URL=https://your-backend.herokuapp.com npm run build
+     ```
+   - Or add it to your GitHub Actions workflow as a secret/environment variable
+
+3. **Access your site**:
+   - Once deployed, your site will be available at:
+     `https://andresquast.github.io/TGH-Storm-Predictor/`
+
 ### Running Analysis Pipeline
 
 ```bash
