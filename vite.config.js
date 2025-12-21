@@ -1,9 +1,22 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+const base = process.env.NODE_ENV === 'production' ? '/TGH-Storm-Predictor/' : '/';
+
 export default defineConfig({
-  plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/TGH-Storm-Predictor/' : '/',
+  plugins: [
+    react(),
+    {
+      name: 'html-transform',
+      transformIndexHtml(html) {
+        return html.replace(
+          /%PUBLIC_URL%/g,
+          base
+        );
+      }
+    }
+  ],
+  base: base,
   server: {
     port: 3000,
     proxy: {
