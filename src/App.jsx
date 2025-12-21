@@ -146,7 +146,16 @@ function App() {
 
       <footer>
         <p>Model trained on historical storm data (2004-2024)</p>
-        <p>Created by <a href="https://andresquast.com" target="_blank" rel="noopener noreferrer">Andres Quast</a></p>
+        <p>
+          Created by{" "}
+          <a
+            href="https://andresquast.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Andres Quast
+          </a>
+        </p>
       </footer>
     </div>
   );

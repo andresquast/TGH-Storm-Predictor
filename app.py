@@ -14,8 +14,8 @@ import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from scipy import stats
-from data_fetcher import StormDataFetcher
-from staffing_engine import calculate_bridge_event_staffing
+from backend.data_fetcher import StormDataFetcher
+from backend.staffing_engine import calculate_bridge_event_staffing
 from datetime import datetime
 
 app = Flask(__name__, 

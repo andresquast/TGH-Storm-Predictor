@@ -3,6 +3,7 @@
 A predictive model for estimating bridge closure duration and staffing requirements during hurricanes and tropical storms affecting the Tampa Bay area. The model uses historical storm data (1996-2024) to predict how long bridges connecting Tampa General Hospital to the mainland will remain closed, enabling proactive staffing and resource planning.
 
 The system provides:
+
 - **Bridge closure duration predictions** based on storm characteristics
 - **Physician staffing requirements** calculated from predicted closure time and seasonal hospital census
 - **Client-side predictions** - works entirely in the browser without requiring a backend server
@@ -16,8 +17,9 @@ Live site: [https://andresquast.github.io/TGH-Storm-Predictor/](https://andresqu
 The dataset includes 17 storms with bridge closure data:
 
 **High Quality Data (12 storms):**
+
 - Hurricane Irma (2017) - 22 hours
-- Tropical Storm Eta (2020) - 18 hours  
+- Tropical Storm Eta (2020) - 18 hours
 - Hurricane Ian (2022) - 27 hours
 - Hurricane Idalia (2023) - 12 hours
 - Hurricane Debby (2024) - 40 hours
@@ -30,6 +32,7 @@ The dataset includes 17 storms with bridge closure data:
 - Tropical Storm Debby (2012) - 48 hours
 
 **Medium Quality Data (5 storms):**
+
 - Hurricane Fay (2008) - 22 hours
 - Hurricane Jeanne (2004) - 14 hours
 - Hurricane Frances (2004) - 16 hours
@@ -37,6 +40,7 @@ The dataset includes 17 storms with bridge closure data:
 - Hurricane Josephine (1996) - 18 hours
 
 **Closure Duration Statistics:**
+
 - Mean: 21.3 hours
 - Median: 18.0 hours
 - Range: 6 - 48 hours
@@ -47,7 +51,7 @@ The dataset includes 17 storms with bridge closure data:
 - NOAA National Hurricane Center
 - Florida Highway Patrol
 - Tampa Bay Times
-- Florida Department of Transportation  
+- Florida Department of Transportation
 - National Weather Service Tampa Bay
 
 ## Features Used for Prediction
@@ -61,6 +65,7 @@ The model uses 5 features to predict bridge closure duration:
 5. **Month** - Month of year (for seasonal effects)
 
 **Key Finding**: Forward speed has the strongest correlation with closure duration (-0.623). Slower-moving storms result in significantly longer bridge closures:
+
 - Slow storms (2-5 mph) → 40-48 hour closures
 - Fast storms (18+ mph) → 6-18 hour closures
 
@@ -76,6 +81,7 @@ The model is validated using Leave-One-Out Cross-Validation (LOOCV), where each 
 - **Training Method**: Each prediction uses model trained on 16 other storms
 
 **Validation Method:**
+
 - Uses LOOCV - each storm predicted using model trained on all OTHER storms
 - Honest error estimates - not backfit
 - Proof-of-concept validated on historical data

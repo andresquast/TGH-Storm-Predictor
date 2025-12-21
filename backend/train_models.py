@@ -47,11 +47,12 @@ def train_closure_model():
         print(f"  {row['feature']:20s}: {row['coefficient']:8.2f}")
     
     # Save model
-    Path('models').mkdir(exist_ok=True)
-    with open('models/closure_model.pkl', 'wb') as f:
+    model_dir = Path('../models')
+    model_dir.mkdir(exist_ok=True)
+    with open(model_dir / 'closure_model.pkl', 'wb') as f:
         pickle.dump(model, f)
     
-    print(f"\nModel saved to models/closure_model.pkl")
+    print(f"\nModel saved to ../models/closure_model.pkl")
     print(f"Training data: {len(df)} storms from {df['year'].min()}-{df['year'].max()}")
     
     return model, df
@@ -122,8 +123,9 @@ def get_seasonal_census_avg():
     }
     
     # Save for use in app
-    Path('models').mkdir(exist_ok=True)
-    with open('models/seasonal_census.pkl', 'wb') as f:
+    model_dir = Path('../models')
+    model_dir.mkdir(exist_ok=True)
+    with open(model_dir / 'seasonal_census.pkl', 'wb') as f:
         pickle.dump(seasonal_census, f)
     
     print("\n" + "="*60)
@@ -135,7 +137,7 @@ def get_seasonal_census_avg():
                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][month]
         print(f"  {month_name:3s}: {census} patients")
     
-    print("\nSaved to models/seasonal_census.pkl")
+    print("\nSaved to ../models/seasonal_census.pkl")
     
     return seasonal_census
 
@@ -148,7 +150,7 @@ def test_model_predictions():
     print("="*60)
     
     # Load model
-    with open('models/closure_model.pkl', 'rb') as f:
+    with open('../models/closure_model.pkl', 'rb') as f:
         model = pickle.load(f)
     
     # Load data

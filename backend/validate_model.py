@@ -158,7 +158,7 @@ def visualize_validation_results(results_df):
     plt.tight_layout()
     
     # Save figure
-    output_path = 'validation_results.png'
+    output_path = '../assets/validation_results.png'
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     print(f"\nVisualization saved: {output_path}")
     
@@ -240,7 +240,7 @@ def visualize_feature_importance():
     fig1.subplots_adjust(left=0.25, right=0.95, top=0.95, bottom=0.1)
     
     # Save figure
-    output_path1 = 'feature_coefficients.png'
+    output_path1 = '../assets/feature_coefficients.png'
     plt.savefig(output_path1, dpi=300, bbox_inches='tight')
     print(f"\nFeature coefficients visualization saved: {output_path1}")
     plt.close(fig1)
@@ -290,7 +290,7 @@ def visualize_feature_importance():
     fig2.subplots_adjust(left=0.25, right=0.95, top=0.95, bottom=0.1)
     
     # Save figure
-    output_path2 = 'feature_correlations.png'
+    output_path2 = '../assets/feature_correlations.png'
     plt.savefig(output_path2, dpi=300, bbox_inches='tight')
     print(f"Feature correlations visualization saved: {output_path2}")
     plt.close(fig2)
@@ -418,9 +418,9 @@ if __name__ == '__main__':
     print("="*60)
     print("""
 Files created:
-  validation_results.png - Visual comparison of predictions
-  feature_coefficients.png - Feature coefficients (model weights)
-  feature_correlations.png - Feature correlations with closure duration
+  assets/validation_results.png - Visual comparison of predictions
+  assets/feature_coefficients.png - Feature coefficients (model weights)
+  assets/feature_correlations.png - Feature correlations with closure duration
   
 Next steps:
   - Use app.py to demonstrate interactive predictions

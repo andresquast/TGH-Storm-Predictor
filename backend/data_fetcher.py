@@ -11,7 +11,7 @@ from datetime import datetime
 class StormDataFetcher:
     """Fetches and processes historical storm data from JSON"""
     
-    def __init__(self, json_path='data/historical_storms.json'):
+    def __init__(self, json_path='../data/historical_storms.json'):
         """
         Initialize fetcher with path to JSON file
         
@@ -123,7 +123,7 @@ class StormDataFetcher:
         
         return df.describe()
     
-    def export_for_modeling(self, output_path='data/modeling_data.csv'):
+    def export_for_modeling(self, output_path='../data/modeling_data.csv'):
         """Export clean data for modeling"""
         df = self.get_storms_dataframe(include_no_closure=False)
         

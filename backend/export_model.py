@@ -15,7 +15,7 @@ def export_model():
     """Export closure prediction model to JSON"""
     
     # Load the trained model
-    model_path = Path('models/closure_model.pkl')
+    model_path = Path('../models/closure_model.pkl')
     if not model_path.exists():
         raise FileNotFoundError(f"Model not found at {model_path}. Run train_models.py first.")
     
@@ -60,7 +60,7 @@ def export_model():
     }
     
     # Save to public directory (will be included in build)
-    output_path = Path('public/model.json')
+    output_path = Path('../public/model.json')
     output_path.parent.mkdir(exist_ok=True)
     
     with open(output_path, 'w') as f:
@@ -79,7 +79,7 @@ def export_seasonal_census():
     """Export seasonal census data to JSON"""
     
     # Load seasonal census
-    census_path = Path('models/seasonal_census.pkl')
+    census_path = Path('../models/seasonal_census.pkl')
     if not census_path.exists():
         # Generate it if it doesn't exist
         from train_models import get_seasonal_census_avg
@@ -89,7 +89,7 @@ def export_seasonal_census():
             seasonal_census = pickle.load(f)
     
     # Export to JSON
-    output_path = Path('public/seasonal_census.json')
+    output_path = Path('../public/seasonal_census.json')
     output_path.parent.mkdir(exist_ok=True)
     
     with open(output_path, 'w') as f:
@@ -132,7 +132,7 @@ def export_staffing_constants():
         'temporal': temporal_data
     }
     
-    output_path = Path('public/staffing_constants.json')
+    output_path = Path('../public/staffing_constants.json')
     output_path.parent.mkdir(exist_ok=True)
     
     with open(output_path, 'w') as f:
