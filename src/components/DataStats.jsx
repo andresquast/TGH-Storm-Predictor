@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { API_BASE_URL } from '../config'
 import './DataStats.css'
 
 const MONTH_NAMES = [
@@ -12,7 +13,7 @@ function DataStats() {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        fetch('/api/data-stats')
+        fetch(`${API_BASE_URL}/api/data-stats`)
             .then(res => {
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`)

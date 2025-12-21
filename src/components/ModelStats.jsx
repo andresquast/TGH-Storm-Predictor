@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE_URL } from "../config";
 import "./ModelStats.css";
 
 function ModelStats() {
@@ -7,7 +8,7 @@ function ModelStats() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/api/model-stats")
+    fetch(`${API_BASE_URL}/api/model-stats`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);

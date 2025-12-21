@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE_URL } from "../config";
 import "./StaffingProjections.css";
 
 function StaffingProjections({ predictionData }) {
@@ -18,7 +19,7 @@ function StaffingProjections({ predictionData }) {
       setError(null);
 
       try {
-        const response = await fetch("/api/staffing-projections", {
+        const response = await fetch(`${API_BASE_URL}/api/staffing-projections`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -51,7 +52,7 @@ function StaffingProjections({ predictionData }) {
 
   useEffect(() => {
     // Fetch MAE from model stats API
-    fetch("/api/model-stats")
+    fetch(`${API_BASE_URL}/api/model-stats`)
       .then((res) => res.json())
       .then((data) => {
         if (data.model_fit && data.model_fit.mae) {

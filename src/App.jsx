@@ -4,6 +4,7 @@ import PredictionResult from './components/PredictionResult'
 import ErrorMessage from './components/ErrorMessage'
 import ModelStats from './components/ModelStats'
 import DataStats from './components/DataStats'
+import { API_BASE_URL } from './config'
 import './App.css'
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
     setPrediction(null)
 
     try {
-      const response = await fetch('/predict', {
+      const response = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ function App() {
 
   useEffect(() => {
     // Fetch MAE from model stats API
-    fetch('/api/model-stats')
+    fetch(`${API_BASE_URL}/api/model-stats`)
       .then((res) => res.json())
       .then((data) => {
         if (data.model_fit && data.model_fit.mae) {
