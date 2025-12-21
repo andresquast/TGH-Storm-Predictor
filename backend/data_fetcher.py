@@ -11,13 +11,17 @@ from datetime import datetime
 class StormDataFetcher:
     """Fetches and processes historical storm data from JSON"""
     
-    def __init__(self, json_path='../data/historical_storms.json'):
+    def __init__(self, json_path=None):
         """
         Initialize fetcher with path to JSON file
         
         Args:
-            json_path: Path to historical_storms.json file
+            json_path: Path to historical_storms.json file (defaults to data/historical_storms.json relative to project root)
         """
+        if json_path is None:
+            # Get path relative to project root (go up from backend/ to root, then into data/)
+            project_root = Path(__file__).parent.parent
+            json_path = project_root / 'data' / 'historical_storms.json'
         self.json_path = Path(json_path)
         self.data = None
         self.metadata = None
@@ -123,8 +127,13 @@ class StormDataFetcher:
         
         return df.describe()
     
-    def export_for_modeling(self, output_path='../data/modeling_data.csv'):
+    def export_for_modeling(self, output_path=None):
         """Export clean data for modeling"""
+        if output_path is None:
+            project_root = Path(__file__).parent.parent
+            output_path = project_root / 'data' / 'modeling_data.csv'
+        else:
+            output_path = Path(output_path)
         df = self.get_storms_dataframe(include_no_closure=False)
         
         # Select only features needed for modeling
