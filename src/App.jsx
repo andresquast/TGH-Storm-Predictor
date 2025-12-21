@@ -5,6 +5,7 @@ import ErrorMessage from './components/ErrorMessage'
 import ModelStats from './components/ModelStats'
 import DataStats from './components/DataStats'
 import { API_BASE_URL } from './config'
+import { loadModelData, predictClosureDuration } from './prediction'
 import './App.css'
 
 function App() {
@@ -14,6 +15,27 @@ function App() {
   const [showModelStats, setShowModelStats] = useState(false)
   const [showDataStats, setShowDataStats] = useState(false)
   const [mae, setMae] = useState(null)
+  const [modelLoaded, setModelLoaded] = useState(false)
+  const [useClientSide, setUseClientSide] = useState(false)
+
+  // Try to load model data on mount
+  useEffect(() => {
+    loadModelData()
+      .then((success) => {
+        if (success) {
+          setModelLoaded(true)
+          setUseClientSide(true)
+          console.log('Model loaded successfully - using client-side predictions')
+        } else {
+          console.log('Model not available - falling back to API')
+          setUseClientSide(false)
+        }
+      })
+      .catch((err) => {
+        console.log('Failed to load model, using API:', err)
+        setUseClientSide(false)
+      })
+  }, [])
 
   const handlePredict = async (formData) => {
     setLoading(true)
@@ -21,18 +43,33 @@ function App() {
     setPrediction(null)
 
     try {
-      const response = await fetch(`${API_BASE_URL}/predict`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      })
+      let data;
 
-      const data = await response.json()
+      if (useClientSide && modelLoaded) {
+        // Use client-side prediction
+        const result = predictClosureDuration(formData)
+        data = {
+          prediction_hours: result.prediction_hours,
+          ci_lower: result.ci_lower,
+          ci_upper: result.ci_upper,
+          features: result.features
+        }
+      } else {
+        // Fall back to API
+        const response = await fetch(`${API_BASE_URL}/predict`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        })
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Prediction failed')
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Prediction failed')
+        }
+
+        data = await response.json()
       }
 
       setPrediction(data)
@@ -66,20 +103,25 @@ function App() {
   }
 
   useEffect(() => {
-    // Fetch MAE from model stats API
-    fetch(`${API_BASE_URL}/api/model-stats`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.model_fit && data.model_fit.mae) {
-          setMae(data.model_fit.mae)
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to fetch MAE:', err)
-        // Fallback to 0.9 if API fails
-        setMae(0.9)
-      })
-  }, [])
+    // Try to fetch MAE from model stats API, but don't fail if unavailable
+    if (!useClientSide) {
+      fetch(`${API_BASE_URL}/api/model-stats`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.model_fit && data.model_fit.mae) {
+            setMae(data.model_fit.mae)
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to fetch MAE:', err)
+          // Fallback to 0.9 if API fails
+          setMae(0.9)
+        })
+    } else {
+      // Use default MAE for client-side mode
+      setMae(0.9)
+    }
+  }, [useClientSide])
 
   return (
     <div className="app">

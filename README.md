@@ -50,25 +50,35 @@ python app.py
 
 ### GitHub Pages Deployment
 
-The frontend is configured for automatic deployment to GitHub Pages:
+The frontend is configured for automatic deployment to GitHub Pages with **client-side predictions** - no backend required!
 
-1. **Enable GitHub Pages** in your repository settings:
+1. **Export Model Data** (required before first deployment):
+   ```bash
+   # Export model to JSON files for client-side predictions
+   python3 export_model.py
+   ```
+   This creates JSON files in the `public/` directory that will be included in the build.
+
+2. **Enable GitHub Pages** in your repository settings:
    - Go to Settings → Pages
    - Under "Source", select "GitHub Actions"
    - The workflow will automatically deploy on every push to `main`
 
-2. **Backend API Configuration**:
-   - GitHub Pages only hosts static files, so the Flask backend needs to be hosted separately
-   - To configure the frontend to use a hosted backend, set the `VITE_API_BASE_URL` environment variable:
+3. **Updating the Model**:
+   - When you retrain the model (`python3 train_models.py`), regenerate the JSON files:
      ```bash
-     # Example: if your backend is at https://your-backend.herokuapp.com
-     VITE_API_BASE_URL=https://your-backend.herokuapp.com npm run build
+     python3 export_model.py
+     git add public/*.json
+     git commit -m "Update model data"
+     git push
      ```
-   - Or add it to your GitHub Actions workflow as a secret/environment variable
 
-3. **Access your site**:
+4. **Access your site**:
    - Once deployed, your site will be available at:
      `https://andresquast.github.io/TGH-Storm-Predictor/`
+   - The site works entirely in the browser - no backend API needed!
+
+**Note**: Model Stats and Data Stats components still require the backend API. The core prediction and staffing calculations work entirely client-side.
 
 ### Running Analysis Pipeline
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../config";
+import { calculateStaffing, loadModelData } from "../prediction";
 import "./StaffingProjections.css";
 
 function StaffingProjections({ predictionData }) {
@@ -8,35 +9,63 @@ function StaffingProjections({ predictionData }) {
   const [error, setError] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [mae, setMae] = useState(null);
+  const [useClientSide, setUseClientSide] = useState(false);
+
+  // Check if model is available
+  useEffect(() => {
+    loadModelData()
+      .then((success) => {
+        setUseClientSide(success);
+      })
+      .catch(() => {
+        setUseClientSide(false);
+      });
+  }, []);
 
   useEffect(() => {
     if (!predictionData || !predictionData.prediction_hours) {
       return;
     }
 
-    const fetchStaffing = async () => {
+    const calculateStaffingRequirements = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/staffing-projections`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        let data;
+
+        if (useClientSide) {
+          // Use client-side calculation
+          data = calculateStaffing({
             predicted_duration_hours: predictionData.prediction_hours,
             month: predictionData.features.month,
-            closure_start: new Date().toISOString(),
-          }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.error || "Failed to calculate staffing projections"
+            closure_start: new Date(),
+          });
+        } else {
+          // Fall back to API
+          const response = await fetch(
+            `${API_BASE_URL}/api/staffing-projections`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                predicted_duration_hours: predictionData.prediction_hours,
+                month: predictionData.features.month,
+                closure_start: new Date().toISOString(),
+              }),
+            }
           );
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              errorData.error || "Failed to calculate staffing projections"
+            );
+          }
+
+          data = await response.json();
         }
 
         setStaffing(data);
@@ -47,24 +76,29 @@ function StaffingProjections({ predictionData }) {
       }
     };
 
-    fetchStaffing();
-  }, [predictionData]);
+    calculateStaffingRequirements();
+  }, [predictionData, useClientSide]);
 
   useEffect(() => {
-    // Fetch MAE from model stats API
-    fetch(`${API_BASE_URL}/api/model-stats`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.model_fit && data.model_fit.mae) {
-          setMae(data.model_fit.mae);
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to fetch MAE:", err);
-        // Fallback to 0.9 if API fails
-        setMae(0.9);
-      });
-  }, []);
+    // Fetch MAE from model stats API if not using client-side
+    if (!useClientSide) {
+      fetch(`${API_BASE_URL}/api/model-stats`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.model_fit && data.model_fit.mae) {
+            setMae(data.model_fit.mae);
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch MAE:", err);
+          // Fallback to 0.9 if API fails
+          setMae(0.9);
+        });
+    } else {
+      // Use default MAE for client-side mode
+      setMae(0.9);
+    }
+  }, [useClientSide]);
 
   if (loading) {
     return (
