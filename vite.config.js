@@ -5,16 +5,7 @@ const base = process.env.NODE_ENV === 'production' ? '/TGH-Storm-Predictor/' : '
 
 export default defineConfig({
   plugins: [
-    react(),
-    {
-      name: 'html-transform',
-      transformIndexHtml(html) {
-        return html.replace(
-          /%PUBLIC_URL%/g,
-          base
-        );
-      }
-    }
+    react()
   ],
   base: base,
   server: {
