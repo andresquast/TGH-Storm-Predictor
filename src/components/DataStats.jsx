@@ -13,36 +13,72 @@ function DataStats() {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        // Skip API call if API_BASE_URL is empty (GitHub Pages deployment)
-        if (!API_BASE_URL) {
-            setError('Data statistics are only available when running with the Flask backend server.')
-            setLoading(false)
-            return
-        }
+        const loadStats = async () => {
+            // If API_BASE_URL is empty (GitHub Pages), try to load from JSON file
+            if (!API_BASE_URL) {
+                const basePath = window.location.pathname.includes("/TGH-Storm-Predictor/")
+                    ? "/TGH-Storm-Predictor"
+                    : "";
 
-        fetch(`${API_BASE_URL}/api/data-stats`)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`)
+                const fetchWithFallback = async (paths) => {
+                    for (const path of paths) {
+                        try {
+                            const response = await fetch(path);
+                            if (response.ok) {
+                                return await response.json();
+                            }
+                        } catch (e) {
+                            // Try next path
+                        }
+                    }
+                    throw new Error(`Failed to load from all paths: ${paths.join(", ")}`);
+                };
+
+                try {
+                    const data = await fetchWithFallback([
+                        `${basePath}/data_stats.json`,
+                        "/data_stats.json",
+                        "./data_stats.json",
+                    ]);
+                    setStats(data);
+                    setLoading(false);
+                } catch (err) {
+                    console.error("Failed to load data_stats.json:", err);
+                    setError(
+                        `Data statistics not available. Failed to load data_stats.json from: ${basePath || "root"}. Error: ${err.message}`
+                    );
+                    setLoading(false);
                 }
-                const contentType = res.headers.get('content-type')
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Response is not JSON. Make sure Flask server is running on port 5001.')
-                }
-                return res.json()
-            })
-            .then(data => {
-                if (data.error) {
-                    setError(data.error)
-                } else {
-                    setStats(data)
-                }
-                setLoading(false)
-            })
-            .catch(err => {
-                setError(err.message || 'Failed to load data statistics. Make sure Flask server is running.')
-                setLoading(false)
-            })
+                return;
+            }
+
+            // Otherwise, fetch from API
+            fetch(`${API_BASE_URL}/api/data-stats`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`)
+                    }
+                    const contentType = res.headers.get('content-type')
+                    if (!contentType || !contentType.includes('application/json')) {
+                        throw new Error('Response is not JSON. Make sure Flask server is running on port 5001.')
+                    }
+                    return res.json()
+                })
+                .then(data => {
+                    if (data.error) {
+                        setError(data.error)
+                    } else {
+                        setStats(data)
+                    }
+                    setLoading(false)
+                })
+                .catch(err => {
+                    setError(err.message || 'Failed to load data statistics. Make sure Flask server is running.')
+                    setLoading(false)
+                })
+        };
+
+        loadStats();
     }, [])
 
     if (loading) {

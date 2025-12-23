@@ -1,0 +1,89 @@
+{
+  "dataset_size": 17,
+  "num_features": 5,
+  "model_fit": {
+    "r2": 0.640931888056552,
+    "adj_r2": 0.4777191099004393,
+    "rmse": 6.28055008775323,
+    "mae": 4.619858673809458
+  },
+  "coefficients": [
+    {
+      "feature": "Intercept",
+      "coefficient": 24.95541225537597,
+      "std_error": 13.500399418839825,
+      "t_value": 1.8484943653260109,
+      "p_value": 0.09156914171946773,
+      "ci_lower": -4.758766520682954,
+      "ci_upper": 54.66959103143489,
+      "significance": "."
+    },
+    {
+      "feature": "max_wind",
+      "coefficient": 0.11602923732165515,
+      "std_error": 0.09011488616013673,
+      "t_value": 1.2875701481270019,
+      "p_value": 0.22432555138940338,
+      "ci_lower": -0.08231228981937008,
+      "ci_upper": 0.3143707644626804,
+      "significance": ""
+    },
+    {
+      "feature": "storm_surge",
+      "coefficient": 2.9807534764288075,
+      "std_error": 1.7617114334110706,
+      "t_value": 1.6919646543119702,
+      "p_value": 0.11875164348919383,
+      "ci_lower": -0.8967472448574192,
+      "ci_upper": 6.858254197715034,
+      "significance": ""
+    },
+    {
+      "feature": "track_distance",
+      "coefficient": 0.12115515877193911,
+      "std_error": 0.04692122590286601,
+      "t_value": 2.58209704543416,
+      "p_value": 0.025494842938378837,
+      "ci_lower": 0.017882236866831366,
+      "ci_upper": 0.22442808067704684,
+      "significance": "*"
+    },
+    {
+      "feature": "forward_speed",
+      "coefficient": -1.3697924335177718,
+      "std_error": 0.44698636356523436,
+      "t_value": -3.0645060905037225,
+      "p_value": 0.010764995358328543,
+      "ci_lower": -2.353602786484294,
+      "ci_upper": -0.3859820805512493,
+      "significance": "*"
+    },
+    {
+      "feature": "month",
+      "coefficient": -2.147679574292363,
+      "std_error": 1.406363626000492,
+      "t_value": -1.5271154163735545,
+      "p_value": 0.15496043186254566,
+      "ci_lower": -5.243065044799892,
+      "ci_upper": 0.9477058962151661,
+      "significance": ""
+    }
+  ],
+  "model_significance": {
+    "f_statistic": 3.9269712537060175,
+    "f_pvalue": 0.0274072260487446,
+    "is_significant": true
+  },
+  "durbin_watson": 2.4424219487308583,
+  "residual_stats": {
+    "mean": -1.6718652606120004e-15,
+    "std_dev": 6.47384284969721,
+    "min": -12.149628004774975,
+    "max": 12.32565962604059
+  },
+  "normality_test": {
+    "statistic": 0.9612747594268494,
+    "p_value": 0.6555553240493364,
+    "is_normal": true
+  }
+}

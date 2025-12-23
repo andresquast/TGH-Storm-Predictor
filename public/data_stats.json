@@ -1,0 +1,74 @@
+{
+  "dataset_overview": {
+    "total_storms": 17,
+    "year_range": {
+      "min": 1996,
+      "max": 2024,
+      "span": 28
+    },
+    "data_quality": {
+      "high": 12,
+      "medium": 5
+    }
+  },
+  "closure_stats": {
+    "mean": 21.294117647058822,
+    "median": 18.0,
+    "std_dev": 10.80373029260237,
+    "min": 6.0,
+    "max": 48.0,
+    "q25": 14.0,
+    "q75": 27.0,
+    "iqr": 13.0
+  },
+  "closure_distribution": {
+    "short": 4,
+    "medium": 8,
+    "long": 5
+  },
+  "wind_stats": {
+    "mean": 77.41176470588235,
+    "median": 70.0,
+    "min": 48.0,
+    "max": 150.0,
+    "std_dev": 30.050080747664833
+  },
+  "surge_stats": {
+    "mean": 4.332941176470588,
+    "median": 4.0,
+    "min": 2.0,
+    "max": 9.0,
+    "std_dev": 1.738867320649718
+  },
+  "track_stats": {
+    "mean": 79.70588235294117,
+    "median": 80.0,
+    "min": 20.0,
+    "max": 150.0,
+    "std_dev": 43.5700078980403
+  },
+  "speed_stats": {
+    "mean": 12.058823529411764,
+    "median": 13.0,
+    "min": 2.0,
+    "max": 24.0,
+    "std_dev": 5.3557281045075245
+  },
+  "temporal_distribution": {
+    "by_month": {
+      "6": 2,
+      "7": 1,
+      "8": 3,
+      "9": 7,
+      "10": 2,
+      "11": 2
+    }
+  },
+  "correlations": {
+    "forward_speed": -0.32976624500825524,
+    "storm_surge": 0.1805352447672595,
+    "max_wind": 0.2691222081129214,
+    "track_distance": 0.3347900571984898,
+    "month": -0.27785733303132387
+  }
+}
