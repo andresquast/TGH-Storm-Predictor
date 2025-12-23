@@ -229,7 +229,7 @@ function StaffingProjections({ predictionData }) {
                     {Math.round(staffing.details.adjusted_census)}
                   </strong>{" "}
                   patients (monthly multiplier:{" "}
-                  {staffing.details.monthly_multiplier.toFixed(2)}x)
+                  {staffing.details?.monthly_multiplier?.toFixed(2) || "N/A"}x)
                 </li>
               </ul>
             </div>
@@ -247,7 +247,10 @@ function StaffingProjections({ predictionData }) {
           <div className="summary-item">
             <span className="summary-label">Risk Score</span>
             <span className={`risk-badge ${riskInfo.color}`}>
-              {staffing.risk_score.toFixed(1)} ({riskInfo.level})
+              {staffing.risk_score !== undefined
+                ? staffing.risk_score.toFixed(1)
+                : "N/A"}{" "}
+              ({riskInfo.level})
             </span>
           </div>
         </div>

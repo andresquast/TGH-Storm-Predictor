@@ -45,6 +45,7 @@ function App() {
         const result = predictClosureDuration(formData);
         data = {
           prediction_hours: result.prediction_hours,
+          prediction_days: Math.round((result.prediction_hours / 24) * 10) / 10,
           ci_lower: result.ci_lower,
           ci_upper: result.ci_upper,
           features: result.features,

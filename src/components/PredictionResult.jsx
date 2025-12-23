@@ -8,7 +8,16 @@ const MONTH_NAMES = [
 ]
 
 function PredictionResult({ data }) {
-    const { prediction_hours, prediction_days, features } = data
+    const { prediction_hours, prediction_days, features } = data || {}
+    
+    // Calculate prediction_days if not provided
+    const days = prediction_days !== undefined 
+        ? prediction_days 
+        : (prediction_hours !== undefined ? Math.round((prediction_hours / 24) * 10) / 10 : 0)
+
+    if (!data || prediction_hours === undefined) {
+        return null
+    }
 
     return (
         <div className="result-container">
@@ -19,7 +28,7 @@ function PredictionResult({ data }) {
                     <span className="prediction-unit">hours</span>
                 </div>
                 <div className="prediction-days">
-                    (approximately {prediction_days.toFixed(1)} days)
+                    (approximately {days.toFixed(1)} days)
                 </div>
                 
                 <div className="feature-summary">
