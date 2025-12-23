@@ -33,7 +33,8 @@ function StaffingProjections({ predictionData }) {
       try {
         let data;
 
-        if (useClientSide) {
+        // Use client-side calculation if useClientSide is true OR if API_BASE_URL is empty (GitHub Pages)
+        if (useClientSide || !API_BASE_URL) {
           data = calculateStaffing({
             predicted_duration_hours: predictionData.prediction_hours,
             month: predictionData.features.month,
