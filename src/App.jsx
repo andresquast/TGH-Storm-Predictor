@@ -155,6 +155,14 @@ function App() {
             rel="noopener noreferrer"
           >
             Andres Quast
+          </a>{" "}
+          |{" "}
+          <a
+            href="/ProjectWriteDec2025.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Click for most recent writeup
           </a>
         </p>
       </footer>
