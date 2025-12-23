@@ -8,6 +8,15 @@ function ModelStats() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Skip API call if API_BASE_URL is empty (GitHub Pages deployment)
+    if (!API_BASE_URL) {
+      setError(
+        "Model statistics are only available when running with the Flask backend server."
+      );
+      setLoading(false);
+      return;
+    }
+
     fetch(`${API_BASE_URL}/api/model-stats`)
       .then((res) => {
         if (!res.ok) {

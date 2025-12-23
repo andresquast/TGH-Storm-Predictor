@@ -13,6 +13,13 @@ function DataStats() {
     const [error, setError] = useState(null)
 
     useEffect(() => {
+        // Skip API call if API_BASE_URL is empty (GitHub Pages deployment)
+        if (!API_BASE_URL) {
+            setError('Data statistics are only available when running with the Flask backend server.')
+            setLoading(false)
+            return
+        }
+
         fetch(`${API_BASE_URL}/api/data-stats`)
             .then(res => {
                 if (!res.ok) {

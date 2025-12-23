@@ -94,7 +94,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (!useClientSide) {
+    if (!useClientSide && API_BASE_URL) {
       fetch(`${API_BASE_URL}/api/model-stats`)
         .then((res) => res.json())
         .then((data) => {
