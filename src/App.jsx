@@ -158,7 +158,7 @@ function App() {
           </a>{" "}
           |{" "}
           <a
-            href="/ProjectWriteDec2025.pdf"
+            href={`${import.meta.env.BASE_URL}ProjectWriteDec2025.pdf`}
             target="_blank"
             rel="noopener noreferrer"
           >
